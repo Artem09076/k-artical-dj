@@ -1,0 +1,43 @@
+services:
+
+  app:
+    build: .
+    env_file:
+      - .env
+  
+  db:
+    image: postgres:latest
+    ports:
+      - "127.0.0.1:5432:5432"
+    command: [ "postgres", "-c", "log_statement=all", "-c", "log_destination=stderr" ]
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${DB_USER}", "-d", "${DB_NAME}" ]
+      interval: 1s
+      retries: 20
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - database-data:/var/lib/postgresql/data
+
+  nginx:
+    image: nginx:alpine3.21
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx:/etc/nginx/templates
+
+  
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus_config.yml"
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+    volumes:
+      - ./prometheus:/etc/prometheus
+volumes:
+  database-data:

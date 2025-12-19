@@ -1,7 +1,10 @@
 import logging
 
+from .middleware import get_correlation_id
+
+
 class CorrelationIdFilter(logging.Filter):
     def filter(self, record):
-        record.correlation_id = getattr(record, 'correlation_id', '-')
-        print('sdvf')
+        record.correlation_id = get_correlation_id() or "N/A"
+
         return True

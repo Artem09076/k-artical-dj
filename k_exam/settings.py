@@ -10,9 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
-from pathlib import Path
 from os import getenv, path
+
 from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
 
@@ -46,19 +47,21 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "article.apps.ArticleConfig",
-    'rest_framework', # Добавляем Django REST framework
+    "rest_framework",  # Добавляем Django REST framework
+    "django_prometheus",
 ]
 
 MIDDLEWARE = [
-    "article.middleware.CorrelationIdMiddleware",
-    "article.middleware.RequestMetricsMiddleware",
+    "django_prometheus.middleware.PrometheusBeforeMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "article.middleware.CorrelationIdMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
 ROOT_URLCONF = "k_exam.urls"
@@ -66,7 +69,7 @@ ROOT_URLCONF = "k_exam.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [path.join(BASE_DIR, 'templates')],
+        "DIRS": [path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -91,7 +94,7 @@ DATABASES = {
         "NAME": getenv("DB_NAME"),
         "USER": getenv("DB_USER"),
         "PASSWORD": getenv("DB_PASSWORD"),
-        "HOST": getenv("DB_HOST"), 
+        "HOST": getenv("DB_HOST"),
         "PORT": getenv("DB_PORT"),
     }
 }
@@ -134,27 +137,27 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'correlation_id_filter': {
-            '()': 'article.logging.CorrelationIdFilter',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {
+        "correlation_id_filter": {
+            "()": "article.logging.CorrelationIdFilter",
         },
     },
-    'formatters': {
-        'verbose': {
-            'format': '[%(asctime)s] [%(levelname)s] [Correlation ID: %(correlation_id)s] %(message)s'
+    "formatters": {
+        "verbose": {
+            "format": "[%(asctime)s] [%(levelname)s] [Correlation ID: %(correlation_id)s] %(message)s"
         },
     },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-            'filters': ['correlation_id_filter'],
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+            "filters": ["correlation_id_filter"],
         },
     },
     "root": {
         "handlers": ["console"],
         "level": "INFO",
     },
-}   
+}

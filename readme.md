@@ -75,3 +75,7 @@ quote-style = "double"
 indent-style = "space"
 line-ending = "lf"
 ```
+Запуск 
+```shell
+ruff check .
+```

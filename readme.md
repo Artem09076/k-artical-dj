@@ -3,7 +3,7 @@
 ```commandline
 django-admin startproject k_exam
 cd k_exam
-django-admin startapp article
+python manage.py startapp article
 ```
 ## 2. Установка poetry
 ### 2.1 Инициализация poetry

@@ -84,6 +84,10 @@ ruff check .
 ```shell
 pip install Django
 ```
+Чтобы установить poetry 
+```shell
+pip install poetry
+```
 Чтобы установить rest_framework
 ```shell
 pip install djangorestframework

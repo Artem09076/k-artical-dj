@@ -5,19 +5,21 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+RUN pip install --upgrade pip \
+    && pip install poetry==1.8.3
+
 COPY pyproject.toml poetry.lock* /app/
 
-RUN pip3 install --user --upgrade  poetry==1.8.3
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-interaction --no-ansi \
+    && poetry cache clear . --all
 
-RUN python3 -m poetry config virtualenvs.create false \
-    && python3 -m poetry install --no-interaction --no-ansi  \
-    && echo yes | python3 -m poetry cache clear . --all
+RUN groupadd -r appuser && useradd -r -g appuser appuser
 
-RUN useradd -m appuser
-USER appuser
-
-
+RUN chown -R appuser:appuser /app
 
 COPY . /app
+
+USER appuser
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

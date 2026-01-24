@@ -14,6 +14,7 @@ class UUIDMixin(models.Model):
 
 
 class Profile(UUIDMixin):
+    # models.AutoField(primary_key=True, editable=False, auto_created=True) если нужно поле с автоинкрементом
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     bio = models.TextField(
         blank=True

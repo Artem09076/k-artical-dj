@@ -84,6 +84,12 @@ def track_db_latency(method_name: str):
 def index(request):
     return HttpResponse("Hello, this is the article index page.")
 ```
+Чтобы посмотреть метрику заходите на ```localhost:9090```, и пишите
+```shell
+db_latency_seconds_bucket{handler="<название handler>",le="0.1"} # Считает сколько вызовов выполнились быстрее или ровно за 0.1 секунды
+db_latency_seconds_sum{handler="<название handler>"} # Считает суммарное время запросов
+db_latency_seconds_count{handler="<название handler>"} # Считает сколько вызовов было сделано
+```
 ### 7.2 Middleware для HTTP-метрик
 Счётчики:
 
@@ -110,6 +116,11 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_prometheus.middleware.PrometheusAfterMiddleware", # Добавляете этот в самый конец
 ]
+```
+Чтобы посмотреть метрику заходите на ```localhost:9090```, и пишите
+```shell
+django_http_responses_total_by_status_total{status="200"} # если надо посмотреть сколько ответов со status_code 200
+django_http_responses_total_by_status_total{status="404"} # если надо посмотреть сколько ответов со status_code 404
 ```
 
 ## 8. Correlation-ID Middleware

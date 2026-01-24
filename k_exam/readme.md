@@ -38,3 +38,11 @@ INSTALLED_APPS = [
     ...
 ]
 ```
+Чтобы добавть пути из article в ```urls.py```
+```python
+urlpatterns = [
+    ...
+    path("", include("article.urls")),
+    ...
+]
+```

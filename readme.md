@@ -79,3 +79,19 @@ line-ending = "lf"
 ```shell
 ruff check .
 ```
+## Настройка 
+Чтобы установить Django
+```shell
+pip install Django
+```
+Чтобы установить rest_framework
+```shell
+pip install djangorestframework
+```
+
+Если будет ситуация, что docker запускается только с sudo(т.е из под root)
+
+```
+sudo usermod -aG docker $USER
+```
+После чего пересоздайте терминал
